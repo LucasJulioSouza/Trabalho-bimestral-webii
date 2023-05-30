@@ -8,16 +8,30 @@
     <form action="{{ route('eixos.store') }}" method="POST">
         @csrf
         
+
+        
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }}"
+
                         name="nome" 
                         placeholder="Nome"
                         value="{{old('nome')}}"
                     />
+
+                    @if($errors->has('nome'))
+                    
+                    <div class='invalid-feedback'>
+                        
+                        {{ $errors->first('nome') }} 
+                    
+                    </div>
+                    
+                    @endif
+
                     <label for="nome">Nome do eixo</label>
                 </div>
             </div>

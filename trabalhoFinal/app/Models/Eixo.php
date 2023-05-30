@@ -17,4 +17,6 @@ class Eixo extends Model
     
     protected $fillable = ['nome'];
 
+    
+
 }

@@ -12,6 +12,13 @@ class DisciplinaController extends Controller
     public function index()
     {
         $dados = Disciplina::all();
+        $cursos = Curso::all();
+
+        foreach ($dados as $disciplina) {
+            $curso = $cursos->firstWhere('id', $disciplina->curso);
+            $disciplina->curso = $curso->nome;
+        }
+       
         return view('disciplinas.index', compact(['dados']));
     }
 
@@ -25,6 +32,24 @@ class DisciplinaController extends Controller
    
     public function store(Request $request)
     {
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'carga' => 'required|max:12|min:1',
+            
+            
+            
+        ];
+
+            $msgs = [
+                
+                "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+                "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
+                "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
+    
+            ];
+
+            $request->validate($regras, $msgs);
+
         Disciplina::create(['nome' => $request->nome,'curso' => $request->cursos,'tempo' => $request->carga ]);
 
         return redirect()->route('disciplinas.index');

@@ -27,11 +27,20 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }}"
                         name="nome" 
                         placeholder="Nome"
                         value="{{old('nome')}}"
                     />
+                    @if($errors->has('nome'))
+                    
+                    <div class='invalid-feedback'>
+                        
+                        {{ $errors->first('nome') }} 
+                    
+                    </div>
+                    
+                    @endif
                     <label for="nome">Nome do Professor</label>
                 </div>
             </div>
@@ -41,11 +50,20 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" 
                         name="email" 
                         placeholder="email"
                         value="{{old('email')}}"
                     />
+                    @if($errors->has('email'))
+                    
+                    <div class='invalid-feedback'>
+                        
+                        {{ $errors->first('email') }} 
+                    
+                    </div>
+                    
+                    @endif
                     <label for="nome">Email do Professor</label>
                 </div>
             </div>
@@ -55,11 +73,20 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('siape') ? 'is-invalid' : '' }}"
                         name="siape" 
                         placeholder="siape"
                         value="{{old('siape')}}"
                     />
+                    @if($errors->has('siape'))
+                    
+                    <div class='invalid-feedback'>
+                        
+                        {{ $errors->first('siape') }} 
+                    
+                    </div>
+                    
+                    @endif
                     <label for="nome">SIAPE do Professor</label>
                 </div>
             </div>
@@ -67,7 +94,7 @@
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                    <select class="form-select" aria-label="Disabled select example" name="eixos">
+                    <select class="form-control " aria-label="Disabled select example" name="eixos">
                        
                     @foreach($eixo as $eixos)
                     <option value="{{ $eixos['id'] }}">{{ $eixos['nome'] }}</option>

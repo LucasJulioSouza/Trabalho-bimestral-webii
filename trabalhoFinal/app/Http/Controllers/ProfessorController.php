@@ -13,9 +13,16 @@ class ProfessorController extends Controller
     public function index()
     {
         $dados = Professor::all();
+        $eixos = Eixo::all();
+        
+        foreach ($dados as $professor) {
+            $eixo = $eixos->firstWhere('id', $professor->eixo);
+            $professor->eixo = $eixo->nome;
+        }
+        return view('professores.index', compact('dados'));
+    
+    
        
-
-        return view('professores.index', compact(['dados']));
     }
 
    
@@ -28,6 +35,24 @@ class ProfessorController extends Controller
   
     public function store(Request $request)
     {
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'email' => 'required|max:250|min:15|unique:email',
+            'siape' => 'required|max:10|min:8|unique:siape',
+            
+            
+        ];
+
+            $msgs = [
+                
+                "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+                "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
+                "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
+    
+            ];
+
+            $request->validate($regras, $msgs);
+
         $status = (bool) $request->input('status');
         if ($status) {
             

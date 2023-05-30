@@ -24,6 +24,22 @@ class EixosController extends Controller
     
     public function store(Request $request)
     {
+        
+        $regras = [
+            'nome' => 'required|max:50|min:10',
+            
+        ];
+
+            $msgs = [
+                
+                "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+                "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
+                "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
+    
+            ];
+
+            $request->validate($regras, $msgs);
+
         Eixo::create(['nome' => $request->nome]);
 
         return redirect()->route('eixos.index');
