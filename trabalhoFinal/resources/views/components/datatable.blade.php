@@ -21,13 +21,19 @@
             @foreach ($data as $item)
                 <tr>
                     @php $cont=0; @endphp
-                    @foreach($fields as $field)
-                        @if($hide[$cont])
-                            <td class="d-none d-md-table-cell">{{ $item[$field] }}</td>
-                        @else
-                            <td>{{ $item[$field] }}</td>
+                    @foreach($header as $head)
+                        @if($head == "AÇÕES" || $head == "id")
+                            @continue
                         @endif
-                        @php $cont=0; @endphp
+                        @if($head == "status")
+                            @if($item['status'] == 0)
+                                <td>INATIVO</td>
+                            @elseif($item['status'] == 1)
+                                <td>ATIVO</td>
+                            @endif
+                        @else
+                            <td>{{ $item[$head] }}</td>
+                        @endif
                     @endforeach
                     <td class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href= "{{ route($crud.'.edit', $item['id']) }}" class="btn btn-success">

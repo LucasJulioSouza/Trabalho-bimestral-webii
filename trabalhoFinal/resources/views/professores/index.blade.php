@@ -11,8 +11,8 @@
         <x-datatable 
                 :title="'Professores'"
                 :crud="'professores'"
-                :header="['Nome','Eixo','Status']" 
-                :fields="['nome','eixo','ativo']"
+                :header="['nome','eixo','status']" 
+                :fields="['nome','eixo','status']"
                 :data="$dados"
                 :hide="[true, false, true, false]" 
                 :info="['nome']"

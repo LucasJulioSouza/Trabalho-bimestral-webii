@@ -56,11 +56,11 @@ class ProfessorController extends Controller
         $status = (bool) $request->input('status');
         if ($status) {
             
-            Professor::create(['ativo'=>$status, 'nome' => $request->nome,'email' => $request->email,'siape' => $request->siape,'eixo' => $request->eixos ]);
+            Professor::create(['status'=>$request->$status, 'nome' => $request->nome,'email' => $request->email,'siape' => $request->siape,'eixo' => $request->eixos ]);
         
         } else {
             
-            Professor::create(['ativo'=>$status, 'nome' => $request->nome,'email' => $request->email,'siape' => $request->siape,'eixo' => $request->eixos]);
+            Professor::create(['status'=>$request->$status, 'nome' => $request->nome,'email' => $request->email,'siape' => $request->siape,'eixo' => $request->eixos]);
         
         }
         
@@ -103,6 +103,8 @@ class ProfessorController extends Controller
             $aux = Professor::find($id);
         
             $aux->fill(['nome' => $request->nome]);
+            $aux->fill(['status'=>$status]);
+            $aux->fill(['eixo' => $request->eixos]);
             $aux->save();
         
         } else {
@@ -110,7 +112,7 @@ class ProfessorController extends Controller
             $aux = Professor::find($id);
         
         $aux->fill(['nome' => $request->nome]);
-        $aux->fill(['ativo'=>$status]);
+        $aux->fill(['status'=>$status]);
         $aux->fill(['eixo' => $request->eixos]);
         
         $aux->save();
@@ -118,7 +120,7 @@ class ProfessorController extends Controller
         }
        
 
-        return redirect()->route('eixos.index');
+        return redirect()->route('professores.index');
     }
 
     

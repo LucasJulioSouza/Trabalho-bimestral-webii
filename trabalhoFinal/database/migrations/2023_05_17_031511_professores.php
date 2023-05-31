@@ -18,7 +18,7 @@ class Professores extends Migration
             $table->string('nome', 100)->notNull();
             $table->string('email', 250)->unique();
             $table->integer('siape')->notNull();
-            $table->boolean('ativo')->default(true);
+            $table->boolean('status')->default(true);
             $table->unsignedBigInteger('eixo');
             $table->foreign('eixo')->references('id')->on('eixos');
             $table->softDeletes();

@@ -34,7 +34,7 @@
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                <span class="input-group-text" id="inputGroupPrepend2">@</span>
+                <span class="input-group-text" id="inputGroupPrepend2">Curso</span>
                     <select class="form-select" aria-label="Disabled select example" name="cursos">
                        
                     @foreach($curso as $cursos)
