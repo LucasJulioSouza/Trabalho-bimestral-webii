@@ -1,24 +1,18 @@
-<!-- Herda o layout padrão definido no template "main" -->
-@extends('templates.main', ['titulo' => "professores", 'rota' => "professores.create"])
-<!-- Preenche o conteúdo da seção "titulo" -->
+@extends('templates.main', ['titulo' => "Professores", 'rota' => "professores.create"])
+
 @section('titulo') Professores @endsection
-<!-- Preenche o conteúdo da seção "conteudo" -->
+
 @section('conteudo')
 
     <div class="row">
         <div class="col">
-        
-        <x-datatable 
-                :title="'Professores'"
-                :crud="'professores'"
-                :header="['nome','eixo','status']" 
-                :fields="['nome','eixo','status']"
+            <x-datalistProfessores 
+                :header="['NOME', 'EIXO', 'STATUS', 'AÇÕES']" 
                 :data="$dados"
-                :hide="[true, false, true, false]" 
-                :info="['nome']"
+                :hide="[true, true, true, false]" 
                 :remove="'nome'"
-            /> 
+            />
         </div>
     </div>
-    
+
 @endsection

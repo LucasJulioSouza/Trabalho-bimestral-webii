@@ -2,92 +2,133 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Curso;
-use App\Models\Eixo;
 use Illuminate\Http\Request;
+
+use App\Models\Curso;
+
+use App\Models\Eixo;
 
 class CursoController extends Controller
 {
-    
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
-    {   
-        
+    {
         $dados = Curso::all();
-        return view('cursos.index', compact(['dados']));
+
+        return view('cursos.index',compact(['dados']));
     }
 
-    
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        $eixo = Eixo::all();
-        return view('cursos.create',compact(['eixo']));
+        $dados = Eixo::all();
+
+        return view('cursos.create',compact(['dados']));
+        
     }
 
-    
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $regras = [
+
             'nome' => 'required|max:50|min:10',
             'sigla' => 'required|max:8|min:2',
-            'tempo' => 'required|max:2|min:1',
-            'eixos' => 'required',
-            
+            'tempo' => 'required|max:2|min:1'
         ];
 
-            $msgs = [
-                
-                "required" => "O preenchimento do campo [:attribute] é obrigatório!",
-                "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
-                "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
+
+        $dados = $request->only(['nome', 'sigla', 'tempo']);
     
-            ];
+        $curso = new Curso($dados);
+        
+        $eixo = Eixo::find($request->input('eixo_id'));
+        
+        $curso->eixo()->associate($eixo);
+        
+        $curso->save();
+        
 
-            $request->validate($regras, $msgs);
-
-        Curso::create(['nome' => $request->nome,'sigla' => $request->sigla,'tempo' => $request->tempo,'eixo' => $request->eixos ]);
 
         return redirect()->route('cursos.index');
     }
 
-    
-    public function show($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
-        $aux = Curso::all()->toArray();
-        
-        $index = array_search($id, array_column($aux, 'id'));
+        $curso = Curso::find($id);
 
-        $dados = $aux[$index];
+        $eixo = Eixo::find($curso->eixo_id);
 
-        return view('cursos.show', compact('dados'));
+        return view('cursos.show')->with('curso',$curso)->with('eixo',$eixo);
     }
 
-    
-    public function edit($id)
-    {
-        $aux = Curso::all()->toArray();
-            
-        $index = array_search($id, array_column($aux, 'id'));
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+{
+    $curso = Curso::find($id);
 
-        $dados = $aux[$index];    
+    $eixos = Eixo::all();
 
-        return view('cursos.edit', compact('dados'));
-    }
 
     
-    public function update(Request $request, $id)
+
+    
+
+    return view('cursos.edit')->with('curso', $curso)->with('eixos', $eixos);
+}
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
+        //
         $aux = Curso::find($id);
+        $regras = [
+
+            'nome' => 'required|max:50|min:10',
+            'sigla' => 'required|max:8|min:2',
+            'tempo' => 'required|max:2|min:1'
+        ];
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
         
-        $aux->fill(['nome' => $request->nome]);
-        $aux->fill(['sigla' => $request->sigla]);
+        $aux->fill(['nome' => $request->nome , 'sigla' => $request->sigla , 'tempo' => $request->tempo, 'eixo_id' => $request->eixo_id]);
         $aux->save();
 
         return redirect()->route('cursos.index');
     }
 
-   
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
+        //
         Curso::destroy($id);
 
         return redirect()->route('cursos.index');

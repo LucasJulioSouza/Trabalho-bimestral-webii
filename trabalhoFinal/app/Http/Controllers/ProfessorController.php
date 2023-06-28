@@ -2,130 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Professor;
 use App\Models\Eixo;
+use App\Models\Professor;
 use Illuminate\Http\Request;
 
-class ProfessorController extends Controller
-{
+class ProfessorController extends Controller {
     
-    
-    public function index()
-    {
-        $dados = Professor::all();
-        $eixos = Eixo::all();
+    public function index() {
         
-        foreach ($dados as $professor) {
-            $eixo = $eixos->firstWhere('id', $professor->eixo);
-            $professor->eixo = $eixo->nome;
-        }
+        $dados = Professor::with(['eixo' => function ($q) {
+            $q->withTrashed();
+        }])->orderBy('nome')->get();
+
         return view('professores.index', compact('dados'));
-    
-    
-       
     }
 
-   
-    public function create()
-    {
-        $eixo = Eixo::all();
-        return view('professores.create',compact(['eixo']));
+    public function create() {
+        
+        $eixos = Eixo::all();
+
+        return view('professores.create', compact('eixos'));
     }
 
-  
-    public function store(Request $request)
-    {
-        $regras = [
-            'nome' => 'required|max:100|min:10',
-            'email' => 'required|max:250|min:15|unique:email',
-            'siape' => 'required|max:10|min:8|unique:siape',
-            
-            
-        ];
-
-            $msgs = [
-                
-                "required" => "O preenchimento do campo [:attribute] é obrigatório!",
-                "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
-                "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
-    
-            ];
-
-            $request->validate($regras, $msgs);
-
-        $status = (bool) $request->input('status');
-        if ($status) {
-            
-            Professor::create(['status'=>$request->$status, 'nome' => $request->nome,'email' => $request->email,'siape' => $request->siape,'eixo' => $request->eixos ]);
+    public function store(Request $request) {
         
-        } else {
-            
-            Professor::create(['status'=>$request->$status, 'nome' => $request->nome,'email' => $request->email,'siape' => $request->siape,'eixo' => $request->eixos]);
-        
-        }
-        
+        Professor::create([
+            'nome' => $request->nome,
+            'email' => $request->email,
+            'siape' => $request->siape,
+            'eixo_id' => $request->eixo_id,
+            'ativo' => $request->radio
+        ]);
 
         return redirect()->route('professores.index');
     }
 
-    public function show($id)
-    {
-        $aux = Professor::all()->toArray();
-            
-        $index = array_search($id, array_column($aux, 'id'));
+    public function show($id) { }
 
-        $dados = $aux[$index];    
+    public function edit($id) {
+        
+        $dados = Professor::with(['eixo' => function ($q) {
+            $q->withTrashed();
+        }])->find($id);
 
-        return view('professores.show', compact('dados'));
+        $eixos = Eixo::all();
+
+        if(!isset($dados)) { return "<h1>ID: $id não encontrado!</h1>"; }
+
+        return view('professores.edit', compact(['dados', 'eixos']));
     }
 
-    public function edit($id)
-    {
-        $eixo = Eixo::all();
+    public function update(Request $request, $id) {
         
-        $aux = Professor::all()->toArray();
-            
-        $index = array_search($id, array_column($aux, 'id'));
+        $obj = Professor::find($id);
 
-        $dados = $aux[$index];    
+        if(!isset($obj)) { return "<h1>ID: $id não encontrado!"; }
 
-        return view('professores.edit', compact('dados'),compact('eixo') );
-    }
+        $obj->fill([
+            'nome' => $request->nome,
+            'email' => $request->email,
+            'siape' => $request->siape,
+            'eixo_id' => $request->eixo_id,
+            'ativo' => $request->radio
+        ]);
 
-    
-    public function update(Request $request, $id)
-    {
-        $eixo = Eixo::all();
-
-        $status = (bool) $request->input('status');
-        if ($status) {
-            
-            $aux = Professor::find($id);
-        
-            $aux->fill(['nome' => $request->nome]);
-            $aux->fill(['status'=>$status]);
-            $aux->fill(['eixo' => $request->eixos]);
-            $aux->save();
-        
-        } else {
-            
-            $aux = Professor::find($id);
-        
-        $aux->fill(['nome' => $request->nome]);
-        $aux->fill(['status'=>$status]);
-        $aux->fill(['eixo' => $request->eixos]);
-        
-        $aux->save();
-        
-        }
-       
+        $obj->save();
 
         return redirect()->route('professores.index');
     }
 
-    
-    public function destroy(Professsor $professsor)
-    {
-        //
+    public function destroy($id) {
+        
+        $obj = Professor::find($id);
+
+        if(!isset($obj)) { return "<h1>ID: $id não encontrado!"; }
+
+        $obj->destroy($id);
+
+        return redirect()->route('professores.index');
     }
 }

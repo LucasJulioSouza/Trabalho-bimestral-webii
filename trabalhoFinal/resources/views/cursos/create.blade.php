@@ -1,31 +1,27 @@
 <!-- Herda o layout padrão definido no template "main" -->
 @extends('templates.main', ['titulo' => "Novo Curso"])
 <!-- Preenche o conteúdo da seção "titulo" -->
-@section('titulo') Cursos @endsection
+@section('titulo') Eixos @endsection
 <!-- Preenche o conteúdo da seção "conteudo" -->
 @section('conteudo')
 
     <form action="{{ route('cursos.store') }}" method="POST">
         @csrf
-        
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }}"
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} "
                         name="nome" 
                         placeholder="Nome"
                         value="{{old('nome')}}"
+
                     />
                     @if($errors->has('nome'))
-                    
-                    <div class='invalid-feedback'>
-                        
-                        {{ $errors->first('nome') }} 
-                    
-                    </div>
-                    
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
                     @endif
                     <label for="nome">Nome do Curso</label>
                 </div>
@@ -36,20 +32,17 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control {{ $errors->has('sigla') ? 'is-invalid' : '' }}" 
+                        class="form-control {{ $errors->has('sigla') ? 'is-invalid' : '' }} "
                         name="sigla" 
-                        placeholder="sigla"
+                        placeholder="Nome"
                         value="{{old('sigla')}}"
                     />
                     @if($errors->has('sigla'))
-                    
-                    <div class='invalid-feedback'>
-                        
-                        {{ $errors->first('sigla') }} 
-                    
-                    </div>
-                    
+                        <div class="invalid-feedback">
+                            {{ $errors->first('sigla') }}
+                        </div>
                     @endif
+
                     <label for="nome">Sigla do Curso</label>
                 </div>
             </div>
@@ -58,44 +51,34 @@
             <div class="col" >
                 <div class="form-floating mb-3">
                     <input 
-                        type="text" 
-                        class="form-control {{ $errors->has('tempo') ? 'is-invalid' : '' }}"
+                        type='number'
+                        class="form-control {{ $errors->has('tempo') ? 'is-invalid' : '' }} "
+
                         name="tempo" 
-                        placeholder="tempo"
+                        placeholder="Tempo"
                         value="{{old('tempo')}}"
+
                     />
                     @if($errors->has('tempo'))
-                    
-                    <div class='invalid-feedback'>
-                        
-                        {{ $errors->first('tempo') }} 
-                    
-                    </div>
-                    
+                        <div class="invalid-feedback">
+                            {{ $errors->first('tempo') }}
+                        </div>
                     @endif
-                    <label for="nome">Tempo do Curso(anos)</label>
+                    <label for="tempo">Tempo do Curso</label>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                    <select class="form-control {{ $errors->has('eixos') ? 'is-invalid' : '' }}" aria-label="Disabled select example" name="eixos">
-                       
-                    @foreach($eixo as $eixos)
-                    <option value="{{ $eixos['id'] }}">{{ $eixos['nome'] }}</option>
-                    @endforeach
+                            <select class="form-select" name="eixo_id">
+                    <?php foreach($dados as $itens){?>
+                        <option value="<?php echo $itens['id']?>"> <?php echo $itens['nome']?>  </option>
+                    <?php } ?> 
                     
-                    </select>
-                    @if($errors->has('eixos'))
-                    
-                    <div class='invalid-feedback'>
-                        
-                        {{ $errors->first('eixos') }} 
-                    
-                    </div>
-                    
-                    @endif
+                </select> 
+                <label for="eixo_id">Eixo</label>
+
                 </div>
             </div>
         </div>
