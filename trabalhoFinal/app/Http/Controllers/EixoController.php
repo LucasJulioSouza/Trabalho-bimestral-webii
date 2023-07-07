@@ -2,65 +2,106 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Eixo;
 use Illuminate\Http\Request;
 
-class EixoController extends Controller {
-   
-    public function index() {
+use \App\Models\Eixo;
 
-       $dados = Eixo::all();
+class EixoController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+        
+        $eixos = Eixo::all();
+        // dd($eixos);
+        return view('eixos.index', compact(['eixos']));
 
-       return view('eixos.index', compact('dados'));
     }
 
-    public function create(){
-
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
         return view('eixos.create');
     }
 
-    public function store(Request $request) {
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
 
-        Eixo::create([
-            'nome' => $request->nome
+        $regras = ([
+            'nome' => 'required|max:50|min:10'
         ]);
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
+
+        Eixo::create(['nome' => $request->nome]);
 
         return redirect()->route('eixos.index');
     }
 
-    public function show($id) { }
-
-    public function edit($id) {
-
-        $dados = Eixo::find($id);
-
-        if(!isset($dados)) { return "<h1>ID: $id não encontrado!</h1>"; }
-
-        return view('eixos.edit', compact('dados'));
-    }
-
-    public function update(Request $request, $id) {
-
-        $obj = Eixo::find($id);
-
-        if(!isset($obj)) { return "<h1>ID: $id não encontrado!"; }
-
-        $obj->fill([
-            'nome' => $request->nome
-        ]);
-
-        $obj->save();
-
-        return redirect()->route('eixos.index');
-    }
-
-    public function destroy($id) {
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
         
-        $obj = Eixo::find($id);
+    }
 
-        if(!isset($obj)) { return "<h1>ID: $id não encontrado!"; }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        $dados = Eixo::find($id)->toArray();
 
-        $obj->destroy($id);
+        return view('eixos.edit',compact('dados'));
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $aux = Eixo::find($id);
+
+        $regras = ([
+            'nome' => 'required|max:50|min:10'
+        ]);
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
+        
+        $aux->fill(['nome' => $request->nome]);
+        $aux->save();
+
+        return redirect()->route('eixos.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        Eixo::destroy($id);
 
         return redirect()->route('eixos.index');
     }

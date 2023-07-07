@@ -1,7 +1,7 @@
 <!-- Herda o layout padrão definido no template "main" -->
 @extends('templates.main', ['titulo' => "Novo Aluno"])
 <!-- Preenche o conteúdo da seção "titulo" -->
-@section('titulo') Aluno @endsection
+@section('titulo') Alunos @endsection
 <!-- Preenche o conteúdo da seção "conteudo" -->
 @section('conteudo')
 
@@ -12,26 +12,34 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
                         name="nome" 
-                        placeholder="nome"
+                        placeholder="Nome"
                         value="{{old('nome')}}"
+                        
                     />
-                    <label for="nome">Nome do Aluno</label>
+
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
+
+                    <label for="nome">Nome do aluno</label>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                    <select name="curso_id" class="form-control">
-                        @foreach($cursos as $item)
-                            <option value="{{$item->id}}">
-                                {{$item->nome}}
-                            </option>
-                        @endforeach
-                    </select>
-                    <label for="curso_id">Curso</label>
+                            <select class="form-select" name="curso_id">
+                    <?php foreach($dados as $itens){?>
+                        <option value="<?php echo $itens['id']?>"> <?php echo $itens['nome']?>  </option>
+                    <?php } ?> 
+                    
+                </select> 
+                <label for="curso_id">Curso</label>
+
                 </div>
             </div>
         </div>
@@ -51,6 +59,7 @@
                 </a>
             </div>
         </div>
+
     </form>
 
 @endsection

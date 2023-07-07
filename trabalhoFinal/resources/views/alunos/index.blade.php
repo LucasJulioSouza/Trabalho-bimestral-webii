@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col">
-            <x-datalistAlunos
+            <x-datatable 
                 title="Alunos" 
                 crud="alunos" 
                 :header="['id', 'nome']" 

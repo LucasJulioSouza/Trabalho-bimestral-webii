@@ -1,21 +1,20 @@
 <!-- Herda o layout padrão definido no template "main" -->
 @extends('templates.main', ['titulo' => "Novo Professor"])
 <!-- Preenche o conteúdo da seção "titulo" -->
-@section('titulo') Professor @endsection
+@section('titulo') Professores @endsection
 <!-- Preenche o conteúdo da seção "conteudo" -->
 @section('conteudo')
 
     <form action="{{ route('professores.store') }}" method="POST">
         @csrf
-        <div class="row">
+        
+    <div class="row">
             <div class="col" >
-                <div class="form-check form-check-inline">
-                    <input class="btn-check" type="radio" name="radio" id="ativo" value="1">
-                    <label class="btn btn-outline-sucess" for="ativo">ATIVO</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="btn-check" type="radio" name="radio" id="inativo" value="0">
-                    <label class="btn btn-outline-danger" for="inativo">INATIVO</label>
+                <div class="mb-3">
+                    <input type="radio" class="btn-check" name="status" id="option1" autocomplete="off" value=1 checked>
+                    <label class="btn btn-outline-success" for="option1">Ativo</label>
+                    <input type="radio" class="btn-check" name="status" id="option2" autocomplete="off" value=0>
+                    <label class="btn btn-outline-danger" for="option2">Inativo</label>
                 </div>
             </div>
         </div>
@@ -24,11 +23,16 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
                         name="nome" 
-                        placeholder="nome"
+                        placeholder="Nome"
                         value="{{old('nome')}}"
                     />
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
                     <label for="nome">Nome do Professor</label>
                 </div>
             </div>
@@ -37,13 +41,20 @@
             <div class="col" >
                 <div class="form-floating mb-3">
                     <input 
-                        type="email" 
-                        class="form-control" 
+                        type="text" 
+                        class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }} " 
+ 
                         name="email" 
-                        placeholder="email"
+                        placeholder="Email"
                         value="{{old('email')}}"
+
                     />
-                    <label for="email">E-mail do Professor</label>
+                    @if($errors->has('email'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('email') }}
+                        </div>
+                    @endif
+                    <label for="email">Email do Professor</label>
                 </div>
             </div>
         </div>
@@ -51,12 +62,19 @@
             <div class="col" >
                 <div class="form-floating mb-3">
                     <input 
-                        type="number" 
-                        class="form-control" 
+                        type='number'
+                        class="form-control {{ $errors->has('siape') ? 'is-invalid' : '' }} " 
+
                         name="siape" 
-                        placeholder="siape"
+                        placeholder="Siape"
                         value="{{old('siape')}}"
+
                     />
+                    @if($errors->has('siape'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('siape') }}
+                        </div>
+                    @endif
                     <label for="siape">SIAPE do Professor</label>
                 </div>
             </div>
@@ -64,14 +82,14 @@
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                    <select name="eixo_id" class="form-control">
-                        @foreach($eixos as $e)
-                            <option value="{{$e->id}}">
-                                {{$e->nome}}
-                            </option>
-                        @endforeach
-                    </select>
-                    <label for="eixo_id">Eixo / Área</label>
+                            <select class="form-select" name="eixo_id">
+                    <?php foreach($dados as $itens){?>
+                        <option value="<?php echo $itens['id']?>"> <?php echo $itens['nome']?>  </option>
+                    <?php } ?> 
+                    
+                </select> 
+                <label for="eixo_id">Eixo</label>
+
                 </div>
             </div>
         </div>

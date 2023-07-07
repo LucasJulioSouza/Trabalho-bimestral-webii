@@ -1,23 +1,31 @@
 <!-- Herda o layout padrão definido no template "main" -->
-@extends('templates.main', ['titulo' => "Alterar Disciplina"])
+@extends('templates.main', ['titulo' => "Editar Disciplina"])
 <!-- Preenche o conteúdo da seção "titulo" -->
-@section('titulo') Disciplina @endsection
+@section('titulo') Disciplinas @endsection
 <!-- Preenche o conteúdo da seção "conteudo" -->
 @section('conteudo')
 
-    <form action="{{ route('disciplinas.update', $dados->id) }}" method="POST">
+    <form action="{{ route('disciplinas.update', $disciplina['id']) }}" method="POST">
         @csrf
         @method('PUT')
+
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
+ 
                         name="nome" 
-                        placeholder="nome"
-                        value="{{$dados->nome}}"
+                        placeholder="Nome"
+                        value="{{$disciplina['nome']}}"
+
                     />
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
                     <label for="nome">Nome da Disciplina</label>
                 </div>
             </div>
@@ -25,28 +33,34 @@
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                    <select name="curso_id" class="form-control">
-                        @foreach($cursos as $item)
-                            <option value="{{$item->id}}" @if ($item->id == $dados->curso_id) selected="true" @endif>
-                                {{$item->nome}}
-                            </option>
-                        @endforeach
-                    </select>
-                    <label for="curso_id">Curso</label>
+                    <input 
+                        type='number'
+                        class="form-control {{ $errors->has('carga') ? 'is-invalid' : '' }} "  
+                        name="carga" 
+                        placeholder="carga"
+                        value="{{$disciplina['carga']}}"
+
+                    />
+                    @if($errors->has('carga'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('carga') }}
+                        </div>
+                    @endif
+                    <label for="carga">Carga Horária(numero de aulas)</label>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                    <input 
-                        type="number" 
-                        class="form-control" 
-                        name="carga" 
-                        placeholder="carga"
-                        value="{{$dados->carga}}"
-                    />
-                    <label for="carga">Carga Horária (nr.)aulas</label>
+                            <select class="form-select" name="curso_id">
+                    <?php foreach($dados as $itens){?>
+                        <option value="<?php echo $itens['id']?>"> <?php echo $itens['nome']?>  </option>
+                    <?php } ?> 
+                    
+                </select> 
+                <label for="eixo_id">Curso</label>
+
                 </div>
             </div>
         </div>

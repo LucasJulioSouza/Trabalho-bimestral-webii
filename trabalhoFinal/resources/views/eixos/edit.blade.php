@@ -1,11 +1,11 @@
 <!-- Herda o layout padrão definido no template "main" -->
-@extends('templates.main', ['titulo' => "Alterar Eixo"])
+@extends('templates.main', ['titulo' => "Editar Eixo"])
 <!-- Preenche o conteúdo da seção "titulo" -->
 @section('titulo') Eixos @endsection
 <!-- Preenche o conteúdo da seção "conteudo" -->
 @section('conteudo')
 
-<form action="{{ route('eixos.update', $dados->id) }}" method="POST">
+<form action="{{ route('eixos.update', $dados['id']) }}" method="POST">
     @csrf
     @method('PUT')
     <div class="row">
@@ -13,15 +13,21 @@
             <div class="form-floating mb-3">
                 <input 
                     type="text" 
-                    class="form-control" 
+                    class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
                     name="nome" 
-                    placeholder="nome"
-                    value="{{$dados->nome}}"
+                    placeholder="Nome"
+                    value="{{$dados['nome']}}"
                 />
-                <label for="nome">Nome do Eixo</label>
+                @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
+                <label for="nome">Eixo</label>
             </div>
         </div>
     </div>
+    
     <div class="row">
         <div class="col">
             <a href="{{route('eixos.index')}}" class="btn btn-secondary btn-block align-content-center">

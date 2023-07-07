@@ -6,14 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Professor extends Model {
-
+class Professor extends Model
+{
     use HasFactory;
+
     use SoftDeletes;
 
-    protected $fillable = ['nome', 'email', 'siape', 'eixo_id', 'ativo'];
+    protected $table = "professores";
 
-    public function eixo() {
-        return $this->belongsTo('\App\Models\Eixo');
+    protected $fillable = ['nome','email','siape','ativo'];
+
+    public function eixo(){
+        return $this->belongsTo('App\Models\Eixo');
     }
+
+    public function disciplina(){
+        return $this->hasMany('App\Models\Disciplina','professor_disciplinas');
+    }
+
+    
 }

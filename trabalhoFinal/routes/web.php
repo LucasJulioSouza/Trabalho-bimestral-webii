@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\Nivel1;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +17,28 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('templates.main')->with('titulo', "");
-})->name('index');
+})->name('index.index');
 
-Route::resource('eixos', 'EixoController');
-Route::resource('cursos', 'CursoController');
-Route::resource('professores', 'ProfessorController');
-Route::resource('disciplinas', 'DisciplinaController');
-Route::resource('docencias', 'DocenciaController');
-Route::resource('alunos', 'AlunoController');
+
+
+Route::resource('eixos','EixoController');
+
+Route::resource('cursos','CursoController');
+
+Route::resource('professores','ProfessorController');;
+
+Route::resource('disciplinas','DisciplinaController');;
+
+Route::resource('docencias','DocenciaController');;
+
+Route::resource('alunos','AlunoController');;
+
+Route::resource('livros','LivroController');;
+
+Route::get('/matriculas/{id}', 'MatriculaController@index')->name('matriculas.index');;
+
+Route::post('/matriculas/store', 'MatriculaController@store')->name('matriculas.store');;
+
+
+
+

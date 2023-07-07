@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar de Cursos</title>
-</head>
-<body>
-    <a href="{{route('cursos.index')}}">Voltar</a>
+<h2>Informações do Curso</h2>
 
-    <label>Nome: </label>{{$dados['nome']}}
-    
-</body>
-</html>
+<a href="{{route('cursos.index')}}"><h4>voltar</h4></a>
+
+<h4>ID: {{ $curso['id'] }}</h4>
+
+<h4>Nome: {{ $curso['nome'] }}</h4>
+
+<h4>Sigla: {{ $curso['sigla'] }}</h4>
+
+<h4>Tempo: {{ $curso['tempo'] }}</h4>
+
+<h4>Eixo: {{ $eixo['nome'] }}</h4>
+
+

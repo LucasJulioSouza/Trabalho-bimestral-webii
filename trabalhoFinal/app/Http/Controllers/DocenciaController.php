@@ -2,68 +2,106 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Disciplina;
-use App\Models\Docencia;
-use App\Models\Professor;
 use Illuminate\Http\Request;
 
-class DocenciaController extends Controller {
-    
-    public function index() {
+use App\Models\Disciplina;
+use App\Models\Professor;
+use App\Models\ProfessorDisciplina;
 
-        $professores = Professor::all();
 
+
+class DocenciaController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
         $disciplinas = Disciplina::all();
-        
-        return view('docencias.index', compact(['professores', 'disciplinas']));
+        $professores = Professor::where('ativo','1')->get();
+        $vinculos = ProfessorDisciplina::with(['professores','disciplinas']);
+       
+
+        return view('docencias.index')->with('disciplinas',$disciplinas)->with('professores',$professores)->with('vinculos',$vinculos);
     }
 
-    public function create() {
-        //
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        
     }
 
-    public function store(Request $request) {
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+{
+    $professores = $request->input('professores_id');
+    ProfessorDisciplina::truncate();
+
+    
+
+    foreach ($professores as $professorIdDisciplinaId) {
+        $ids = explode('_', $professorIdDisciplinaId);
+        $disciplinaId = $ids[0];
+        $professorId = $ids[1];
         
-        $professores = $request->PROFESSOR_ID;
-        $disciplina = $request->DISCIPLINA;
+        
+        $professor = Professor::find($professorId);
 
-        for ($i = 0; $i < count($request->DISCIPLINA); $i++) {
 
-            $doc = Docencia::where('disciplina_id', $disciplina[$i])->first();
-
-            if(isset($doc)) {
-                $doc->fill([
-                    'professor_id' => $professores[$i]
-                ]);
-
-                $doc->save();
-            } 
-
-            else {
-                Docencia::create([
-                    'professor_id' => $professores[$i],
-                    'disciplina_id' => $disciplina[$i]
-                ]);
-            }
+        if(isset($professor)){
             
+            
+            $disciplina = Disciplina::find($disciplinaId);
+            
+
+            if (isset($disciplina)) {
+                $obj_professor_disciplina = new ProfessorDisciplina();
+                $obj_professor_disciplina->professor()->associate($professor);
+                $obj_professor_disciplina->disciplina()->associate($disciplina);
+                $obj_professor_disciplina->save();
+            }
+        
         }
 
-        return redirect()->route('disciplinas.index');
+        
     }
 
-    public function show($id) {
+    return redirect()->route('disciplinas.index');
+}
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
         //
     }
 
-    public function edit($id) {
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
         //
     }
 
-    public function update(Request $request, $id) {
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
         //
     }
 
-    public function destroy($id) {
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
         //
     }
 }

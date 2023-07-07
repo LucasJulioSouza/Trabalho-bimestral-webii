@@ -6,12 +6,13 @@
 @section('conteudo')
 
 <body class="aw-layout-simple-page">
-    Sua permissão não permite que tenha acesso ao conteúdo da pagina!!!
+    Desculpe, você não está autorizado a acessar a página que solicitou.
+        Se você acha que isso é um engano, entre em contato conosco.
   
       <div class="d-flex justify-content-center">
       
 
-        <img src="https://www.goldensolucoes.com.br/wp-content/uploads/2016/09/Proibido.jpg" 
+        <img src="https://media.istockphoto.com/id/1221686500/pt/vetorial/stop-sign-red-forbidding-sign-with-human-hand-in-octagon-shape-stop-hand-gesture-do-not.jpg?s=612x612&w=0&k=20&c=tNNp-o1P95W5CwIfC2YyKlsAPIEDODZbkpnT87qZh5s=" 
             alt="Imagem de stop"
             width="300"
             height="300"
